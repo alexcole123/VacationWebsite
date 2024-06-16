@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "8b5bf045-6741-478d-a148-89cf6e5af7fd",
+		"name": "Holidays Rest API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33475486"
+	},
+	"item": [
+		{
+			"name": "Get dates",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/holidays_dates",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"holidays_dates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/total_users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"total_users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get destination + likes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/get_cities_with_likes",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"get_cities_with_likes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"alex@gmail.com\",\n    \"password\": \"1234\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"alex@gmail.com\",\n    \"password\": \"1234\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/logout",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

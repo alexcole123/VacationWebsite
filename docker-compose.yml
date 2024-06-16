@@ -1,0 +1,130 @@
+version: '3.6'
+
+services:
+  # MySQL service
+  database-service:
+    # Image name to create from Dockerfile
+    image: alexjcoleb/vacations-database-image:1.0
+
+    # Location of Dockerfile
+    build: ./Database
+
+    # Container name to create
+    container_name: vacations-database-container
+
+    # Named volume for MySQL folder
+    volumes:
+      - vacations-volume:/var/lib/mysql
+
+    # Environment variables needed by MYSQL for creating database
+    environment: 
+      MYSQL_HOST: localhost
+      MYSQL_USER: Alice
+      MYSQL_PASSWORD: Wonderland
+      MYSQL_DATABASE: vacations
+      MYSQL_ROOT_PASSWORD: Wonderland
+
+    # What to do if container crashes
+    restart: unless-stopped
+
+    # Check if database is up and running
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      interval: 5s
+      retries: 24
+
+#------------------------------------------------------------------------------------------------------------------
+
+  # Flask service (application)
+  flask-service:
+    # On which service we are depending on for running and shutting down order
+    depends_on:
+      database-service:
+        condition: service_healthy
+
+    # Image name to create from Dockerfile
+    image: alexjcoleb/vacations-flask-image:1.0
+
+    # Location of Dockerfile
+    build: ./Vacations
+
+    # Container name to create
+    container_name: vacations-flask-container
+
+    # Environment variables needed by our backend project for connecting to MYSQL located in another container
+    environment: 
+      MYSQL_HOST: database-service
+      MYSQL_USER: Alice
+      MYSQL_PASSWORD: Wonderland
+      MYSQL_DATABASE: vacations
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Port mapping (host:container)
+    ports:
+      - 5000:5000
+
+#------------------------------------------------------------------------------------------------------------------
+
+  # Django service (application)
+  django-service:
+    # On which service we are depending on for running and shutting down order
+    depends_on:
+      database-service:
+        condition: service_healthy
+
+    # Image name to create from Dockerfile
+    image: alexjcoleb/vacations-django-image:1.0
+
+    # Location of Dockerfile
+    build: ./Stats
+
+    # Container name to create
+    container_name: vacations-django-container
+
+    # Environment variables needed by our backend project for connecting to MYSQL located in another container
+    environment: 
+      MYSQL_HOST: database-service
+      MYSQL_USER: Alice
+      MYSQL_PASSWORD: Wonderland
+      MYSQL_DATABASE: vacations
+      MYSQL_ROOT_PASSWORD: Wonderland
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Port mapping (host:container)
+    ports:
+      - 8000:8000
+
+#------------------------------------------------------------------------------------------------------------------
+
+  # React Service
+  react-service:
+    # On which service we are depending on for running and shutting down order
+    depends_on:
+      - django-service
+
+    # Image name to create from Dockerfile
+    image: alexjcoleb/vacations-react-image:1.0
+
+    # Location of Dockerfile
+    build: ./react-stats
+
+    # Container name to create
+    container_name: vacations-react-container
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Port mapping (host:container)
+    ports:
+      - 80:3000
+
+#------------------------------------------------------------------------------------------------------------------
+
+# List of named volumes
+volumes:
+  vacations-volume:
